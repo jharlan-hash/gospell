@@ -30,23 +30,19 @@ type audioMessage struct {
 // It checks if the audio for the word is already generated and stored in the audioMessage struct.
 // If the audio is already generated, it plays the audio directly without calling the API again.
 // If the audio is not generated, it calls the API to synthesize the speech and then plays the audio.
-func (t *TTS) SayWord() {
-	// call tts api
-	if t.audio.Word == t.Word {
-		// no need to call the API again, play the audio
-		t.PlayAudio()
-	} else {
+func (t *TTS) SayWord() error {
+	// call tts api only if not already done
+	if t.audio.Word != t.Word {
 		audioContent, err := t.synthesizeSpeech()
 		if err != nil {
-			log.Fatalf("Failed to synthesize speech: %v", err)
+			return log.Errorf("Failed to synthesize speech. %v", err)
 		}
-
 		t.audio.AudioContent = audioContent
 		t.audio.Word = t.Word
-
-		// play the audio
-		t.PlayAudio()
 	}
+	// play the audio
+	t.PlayAudio()
+	return nil
 }
 
 func (t *TTS) PlayAudio() {
@@ -96,7 +92,7 @@ func (t *TTS) synthesizeSpeech() ([]byte, error) {
 	// Call the API
 	resp, err := t.Client.SynthesizeSpeech(t.Ctx, &req)
 	if err != nil {
-		return nil, err
+		return nil, err // better to add something to the error message.
 	}
 
 	return resp.AudioContent, nil
