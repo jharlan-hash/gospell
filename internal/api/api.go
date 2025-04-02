@@ -18,10 +18,10 @@ var fs embed.FS
 
 // From The Art of Computer Programming, Volume 2, Section 3.4.2, by Donald E. Knuth.
 // This is a reservoir sampling algorithm that picks a random line from a file.
-func getRandomLineFromWordlist() string {
+func getRandomLineFromWordlist() string {   // also return an error
 	file, err := fs.Open("wordlist.txt")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err)   // in libraries, don't crash out.  return the error instead (e.g. return fmt.Errorf("Unable to open file. %v", err).  You wouldn't want third part libs to crash your program.  Passing error would let you handle it more gracefully.
 	}
 	defer file.Close()
 
