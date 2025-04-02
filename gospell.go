@@ -168,7 +168,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 
 	case correctMessage:
-        var correctColor lipgloss.Color = lipgloss.Color("#66ac5a") // og
+         correctColor := lipgloss.Color("#66ac5a") // og
 		m.streak++
 		m.definition = wordwrap.String(m.definition, 100)
 		m.borderColor = correctColor // Set border color to green for correct answer
@@ -177,7 +177,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, getNewWord(m)
 
 	case incorrectMessage:
-        var incorrectColor lipgloss.Color = lipgloss.Color("#ED4337") // og
+         incorrectColor := lipgloss.Color("#ED4337") // og
 		m.streak = 0
 		m.definition = wordwrap.String(m.definition, 100)
 		m.borderColor = incorrectColor // Set border color to red for incorrect answer
@@ -206,15 +206,17 @@ func (m *model) submitWord() (tea.Model, tea.Cmd) {
 
 	if userInput == m.word { // Correct answer.
 		return m, func() tea.Msg { return correctMessage{} }
-	} else { // Incorrect answer.
-		return m, func() tea.Msg { return incorrectMessage{} }
-	}
+	} 
+	
+	// Incorrect answer.
+	return m, func() tea.Msg { return incorrectMessage{} }
+
 
 }
 
 func (m model) View() string {
-    var foregroundColor lipgloss.Color = lipgloss.Color(1)
-    var backgroundColor lipgloss.Color = lipgloss.Color(1)
+     foregroundColor := lipgloss.Color(1)
+     backgroundColor := lipgloss.Color(1)
 
 	// Create a container style for the main content
 	inputContainer := lipgloss.NewStyle().
