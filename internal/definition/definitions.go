@@ -1,19 +1,21 @@
 package definition
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type State struct {
-	cache       Dictionary
-	word        string
-	index       int
-	definitions []string
+	Cache       Dictionary
+	Word        string
+	Index       int
+	Definitions []string
 }
 
 // getDefinitionList returns a list of definitions for a given word from the cache.
 // It populates the definitions field in the State struct.
 // This function is called internally by GetDefinition to initialize the definitions list.
-func (s *State) getDefinitionList() {
-	definitions := s.cache[s.word] // O(1) lookup which is so cool
+func (s *State) GetDefinitionList() {
+	definitions := s.Cache[s.Word]
 	list := make([]string, 0)
 
 	for _, definition := range definitions {
@@ -28,28 +30,28 @@ func (s *State) getDefinitionList() {
 		)
 	}
 
-	s.definitions = list // store the definitions in the state
+	s.Definitions = list // store the definitions in the state
 }
 
 // NextDefinition retrieves the next definition of a word from the cache.
 // If the user requests a definition past the last one, it returns the last definition.
 func (s *State) NextDefinition() string {
-	if s.index+1 >= len(s.definitions) { // if user requests something past the end of the definition list
-		return s.definitions[len(s.definitions)-1] // return the last definition
+	if s.Index+1 >= len(s.Definitions) { // if user requests something past the end of the definition list
+		return s.Definitions[len(s.Definitions)-1] // return the last definition
 	} else { // increment index & change definition
-		s.index++
-		return s.definitions[s.index]
+		s.Index++
+		return s.Definitions[s.Index]
 	}
 }
 
 // PrevDefinition retrieves the previous definition of a word from the cache.
 // If the user requests a definition before the first one, it returns the first definition.
 func (s *State) PrevDefinition() string {
-	if s.index-1 < 0 { // if user requests something before the beginning of the definition list
-		return s.definitions[0] // return the first definition
+	if s.Index-1 < 0 { // if user requests something before the beginning of the definition list
+		return s.Definitions[0] // return the first definition
 	} else { // decrement index & change definition
-		s.index--
-		return s.definitions[s.index]
+		s.Index--
+		return s.Definitions[s.Index]
 	}
 }
 
@@ -73,13 +75,12 @@ func (s *State) PrevDefinition() string {
 //	prevDef := state.PrevDefinition() // retrieves the previous definition
 //	fmt.Println(prevDef) // prints the previous definition
 func (m *State) GetDefinition(word string) string {
-	if m.cache == nil { // Only load the cache if it's not already loaded.
-		m.cache = LoadCache()
+	if m.Cache == nil { // Only load the cache if it's not already loaded.
+		m.Cache = LoadCache()
 	}
 
-	m.word = word
-	m.index = 0
-	m.getDefinitionList() // populate the definitions list
-
-	return m.definitions[m.index] // return the first definition
+	m.Word = word
+	m.Index = 0
+	m.GetDefinitionList() // populate the definitions list
+	return m.Definitions[m.Index] // return the first definition
 }

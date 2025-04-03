@@ -32,7 +32,6 @@ type audioMessage struct {
 // It checks if the audio for the word is already generated and stored in the audioMessage struct.
 // If the audio is already generated, it plays the audio directly without calling the API again.
 // If the audio is not generated, it calls the API to synthesize the speech and then plays the audio.
-
 func (t *TTS) SayWord() error {
 	// call tts api only if not already done
 	if t.audio.Word != t.Word {
